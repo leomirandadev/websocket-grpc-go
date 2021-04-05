@@ -8,7 +8,7 @@
 </head>
 <body>
   <script>
-    let socket = new WebSocket("ws://localhost:0504/ws?channel=test")
+    let socket = new WebSocket("ws://localhost:8000/ws?channel=test")
 
     socket.onopen = () => {
       console.log("Successfully connected")
