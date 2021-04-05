@@ -17,7 +17,9 @@ func main() {
 
 	routes.New(&wsInit)
 
-	events.New(&wsInit)
+	go events.New(&wsInit)
 
-	log.Fatal(http.ListenAndServe(":0504", nil))
+	log.Println("GRPC running on localhost:8000")
+	log.Fatal(http.ListenAndServe(":8000", nil))
+
 }
