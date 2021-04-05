@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    let socket = new WebSocket("ws://localhost:0504/ws")
+
+    socket.onopen = () => {
+      console.log("Successfully connected")
+      socket.send(JSON.stringify({user:"leo", message:"I'm here"}))
+    }
+    
+    socket.onclose = (event) => {
+      console.log("Socket closed connection: ", event)
+    }
+
+    socket.onerror = (err) => {
+      console.log("Socket error: ", err)
+    }
+    
+    socket.onmessage = (msg) => {
+      message = JSON.parse(msg.data)
+      console.log("Message receive: ", message)
+    }
+
+  </script>
+</body>
+</html>
