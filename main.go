@@ -14,8 +14,7 @@ func main() {
 	wsInit := ws.New()
 	go wsInit.HandleMessages()
 
-	routesInit := routes.New(&wsInit)
-	routesInit.SetupRoutes()
+	routes.New(&wsInit)
 
 	log.Fatal(http.ListenAndServe(":0504", nil))
 }

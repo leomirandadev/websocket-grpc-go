@@ -19,13 +19,18 @@ type config struct {
 }
 
 func New(wsInit *ws.WS) Router {
-	return &config{
+
+	this := &config{
 		ws: wsInit,
 		upgrader: websocket.Upgrader{
 			ReadBufferSize:  1024,
 			WriteBufferSize: 1024,
 		},
 	}
+
+	this.SetupRoutes()
+
+	return this
 }
 
 func (this *config) SetupRoutes() {
