@@ -6,6 +6,7 @@ import (
 	"log"
 	"net"
 
+	"github.com/leomirandadev/websocket-grpc-go/types"
 	"github.com/leomirandadev/websocket-grpc-go/types/message"
 	"github.com/leomirandadev/websocket-grpc-go/ws"
 	"google.golang.org/grpc"
@@ -32,7 +33,7 @@ func New(wsInit *ws.WS) {
 	s := Server{ws: wsInit}
 
 	grpcServer := grpc.NewServer()
-	message.RegisterPostServiceServer(grpcServer, &s)
+	message.RegisterMessageServiceServer(grpcServer, &s)
 
 	if err := grpcServer.Serve(lis); err != nil {
 		log.Fatalf("GRPC failed to serve: %s", err)
@@ -41,9 +42,13 @@ func New(wsInit *ws.WS) {
 
 func (s *Server) ReceiveMsg(ctx context.Context, in *message.Message) (*message.Result, error) {
 
-	(*s.ws).SendMessage(in)
+	(*s.ws).SendMessage(types.Message{
+		User:    in.User,
+		Message: in.Message,
+		Channel: in.Channel,
+	})
 
 	return &message.Result{
-		ok: true,
+		Ok: true,
 	}, nil
 }
