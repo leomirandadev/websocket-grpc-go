@@ -30,7 +30,6 @@ func New(wsInit *ws.WS) Router {
 
 func (this *config) SetupRoutes() {
 	http.HandleFunc("/ws", this.wsEndpoint)
-	http.HandleFunc("/ws/", this.wsEndpoint)
 }
 
 func (this *config) wsEndpoint(w http.ResponseWriter, r *http.Request) {
@@ -42,7 +41,14 @@ func (this *config) wsEndpoint(w http.ResponseWriter, r *http.Request) {
 		log.Println(err)
 	}
 
-	(*this.ws).SetClient(conn, "default")
+	channelWS := "default"
+	channelQuery := r.URL.Query()["channel"]
+
+	if channelQuery != nil {
+		channelWS = channelQuery[0]
+	}
+
+	(*this.ws).SetClient(conn, channelWS)
 
 	log.Println("Client Successfully connected...")
 

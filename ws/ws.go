@@ -41,6 +41,8 @@ func (this *config) Reader(conn *websocket.Conn) {
 
 			break
 		}
+
+		msg.Channel = this.clients[conn]
 		// Send the newly received message to the broadcast channel
 		this.broadcast <- msg
 	}
@@ -53,12 +55,16 @@ func (this *config) HandleMessages() {
 
 		// Send it out to every client that is currently connected
 		for client := range this.clients {
-			err := client.WriteJSON(msg)
-			if err != nil {
-				log.Printf("handleMessages.error: %v", err)
-				client.Close()
-				delete(this.clients, client)
+
+			if this.clients[client] == msg.Channel {
+				err := client.WriteJSON(msg)
+				if err != nil {
+					log.Printf("handleMessages.error: %v", err)
+					client.Close()
+					delete(this.clients, client)
+				}
 			}
+
 		}
 	}
 }
