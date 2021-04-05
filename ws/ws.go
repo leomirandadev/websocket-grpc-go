@@ -10,6 +10,7 @@ import (
 type WS interface {
 	Reader(conn *websocket.Conn)
 	HandleMessages()
+	SendMessage(msg types.Message)
 	SetClient(conn *websocket.Conn, channel string)
 }
 
@@ -45,8 +46,12 @@ func (this *config) Reader(conn *websocket.Conn) {
 		// Set message to channel of sender client
 		msg.Channel = this.clients[conn]
 		// Send the newly received message to the broadcast channel
-		this.broadcast <- msg
+		this.SendMessage(msg)
 	}
+}
+
+func (this *config) SendMessage(msg types.Message) {
+	this.broadcast <- msg
 }
 
 func (this *config) HandleMessages() {

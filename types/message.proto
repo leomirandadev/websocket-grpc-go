@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+message Message {
+  string user = 1;
+  string message = 2;
+  string channel = 3;
+}
+
+message Result {
+  bool ok = 1;
+}
+
+service MessageService {
+  rpc ReceiveMsg(Message) returns (Result) {};
+}
